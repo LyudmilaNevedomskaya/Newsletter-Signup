@@ -32,9 +32,14 @@ app.post("/", (req, res) => {
   const url = "https://us6.api.mailchimp.com/3.0/lists/6a67b3f895";
   const options = {
     method: "POST",
-    auth: "mila:2d50512cedd7a2e080963c559c4c6aad-us6",
+    auth: "mila:useAPIkeyFromYourMailchimpAccount",
   };
   const request = https.request(url, options, function (response) {
+    if (response.statusCode === 200) {
+      res.sendFile(__dirname + "/success.html");
+    } else {
+      res.sendFile(__dirname + "/failure.html");
+    }
     response.on("data", function (data) {
       console.log(JSON.parse(data));
     });
@@ -43,12 +48,11 @@ app.post("/", (req, res) => {
   request.end();
 });
 
+app.post("/failure", (req, res) => {
+  res.redirect("/");
+});
+
 app.listen(port, () => {
   console.log(`Server is running on PORT ${port}`);
 });
-
-//API Key
-// 2d50512cedd7a2e080963c559c4c6aad-us6
-
-//List ID
-//6a67b3f895
+//
